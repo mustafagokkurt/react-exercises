@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreators from "../redux/actions/actionCreators";
+import * as thunkActions from "../redux/actions/thunkActions";
 import { Input } from "reactstrap";
 import TodoList from "./TodoList";
 class TodoSearch extends Component {
   state = {
-    filter: ""
+    filter: "",
   };
+  componentDidMount() {
+    this.props.actions.getTodosApi();
+  }
   onChangeHandler = (e) => {
     var filter = e.target.value;
     this.setState({ filter });
@@ -17,14 +21,8 @@ class TodoSearch extends Component {
   render() {
     return (
       <div>
-        <Input className="mb-3" type="text" onChange={this.onChangeHandler} placeholder="ara" />
-        <TodoList
-          todos={
-            this.state.filter === ""
-              ? this.props.todos
-              : this.props.filterResult
-          }
-        ></TodoList>
+        <Input className="mb-3" type="text" onChange={this.onChangeHandler} placeholder="ara"/>
+        <TodoList todos={this.state.filter === "" ? this.props.todos : this.props.filterResult}/>
       </div>
     );
   }
@@ -33,13 +31,14 @@ class TodoSearch extends Component {
 function mapStateToProps(state) {
   return {
     todos: state.todoReducer.todos,
-    filterResult: state.todoReducer.filterTodos
+    filterResult: state.todoReducer.filterTodos,
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
     actions: {
       todoSearch: bindActionCreators(actionCreators.todoSearch, dispatch),
+      getTodosApi: bindActionCreators(thunkActions.getTodosApiRequest,dispatch),
     },
   };
 }

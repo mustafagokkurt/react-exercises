@@ -17,6 +17,10 @@ export default function todoReducer(state = initialState, action) {
                 todo.includes(action.payload)
             );
             return { todos: state.todos, filterTodos: state.filterTodos };
+            
+        case actionTypes.GET_TODOS_API:
+            //action'dan gelen todoları(yani api'den gelen) todos state'ine set edip dönderiyoruz.
+            return { todos: action.payload, filterTodos: action.payload };
 
         default:
             return state;
